@@ -1,0 +1,9 @@
+---
+title: "Notes for setting up Pi 4"
+---
+
+# NixOS installation
+
+I (JG) would like to try NixOS as it provides a declarative
+configuration for the OS, which seems a good thing when dealing with
+multiple systems. 

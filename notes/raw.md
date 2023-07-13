@@ -160,12 +160,23 @@ networking.wireless.networks = {
   };
 };
 ```
-and that sets up wifi. (There is an issue I have not resolved, which
-is that when we generate our own SD image we don't want passwords like
-this embedded.)
+Following a change to the configuration, one runs
+```sh
+nixos-rebuild switch
+```
+and _voila!_ the system is now reconfigured. In particular, the above
+fixes wifi! (There is an issue I have not resolved, which
+is that when we generate our own SD image we don't want passwords 
+embedded like this.)
 
+I will include the entire current config file in an appendix.
 
+## TODO
 
+- Find out how to store secrets 
+- Set up accounts for me and you
+- Set up those accounts with a ssh key for login
+- Write all the other SD cards
 
 
 
@@ -175,3 +186,117 @@ this embedded.)
 [^2]: https://nixos.wiki/wiki/NixOS_on_ARM/Raspberry_Pi_4
 
 [^3]: https://nix.dev/tutorials/nixos/installing-nixos-on-a-raspberry-pi
+
+
+
+# Appendix: Current NixOS configuration
+
+```nix
+# System configuration for Raspberry Pis in the Turing Pi Cluster
+# adapted from the generic NixOS SD distribution
+# James Geddes
+
+
+{ config, pkgs, ... }:
+
+{
+
+  ## NixOS default options (not changed)
+  ## -----------------------------------
+  
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+    ];
+
+  # Use the extlinux boot loader rather than GRUB;
+  # and enable generation of /boot/extlinux/extlinux.conf
+  boot.loader.grub.enable = false;
+  boot.loader.generic-extlinux-compatible.enable = true;
+
+
+  ## Networking
+  ## ----------
+
+  # TODO: Break the hostname and wifi section into a module as that
+  # might be different for each of the Pis.
+  
+  networking.hostName = "church"; 
+  networking.wireless.enable = true;  # Enable wireless support via wpa_supplicant.
+
+  time.timeZone = "Europe/London"; 
+
+  i18n.defaultLocale = "en_GB.UTF-8";
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "uk";
+  #   useXkbConfig = true; # JG: I don't know what this does
+  }; 
+
+
+  ## Default software
+  ## ----------------
+  
+  environment.systemPackages = with pkgs; [
+    vim 
+    emacs
+    wget
+    tailscale
+  ];
+
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
+
+
+  ## Users
+  ## -----
+  
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.nixos = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    packages = with pkgs; [
+      tree
+    ];
+  };
+
+  
+  ## Networking
+  ## ----------
+
+  ## TODO: Keep secrets somewhere else!
+  
+  networking.wireless.networks = {
+    "Turing Guest" = {
+      psk = "<PASSWORD>";
+    };
+  };
+
+  ## Services
+  ## --------
+  
+  ## Tailscale VPN
+  services.tailscale.enable = true;
+
+  # Remote access via ssh
+  services.openssh.enable = true;
+
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It's perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "23.11"; # Did you read the comment?
+```

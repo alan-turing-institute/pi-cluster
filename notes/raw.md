@@ -177,7 +177,8 @@ I will include the entire current config file in an appendix.
 - Set up accounts for me and you
 - Set up those accounts with a ssh key for login
 - Write all the other SD cards
-
+- Learn about "Flakes"
+- Learn about "home-manager" or whatever it is
 
 
 

@@ -105,7 +105,7 @@ found:
 ```
 > set_network 0 ssid "Turing Guest"
 OK
-> set_newwork 0 psk "NETWORK PASSWORD"
+> set_network 0 psk "NETWORK PASSWORD"
 OK
 > enable_network 0
 OK

@@ -71,11 +71,11 @@ in the target SD card (to a USB socket on the Pi, with an SD reader)
 you know which device is assigned. In my case that was
 `/dev/sda`. Then,
 ```sh
-sudo dd if=nixos-sd-image-XXX-aarch64-linux.img of=/dev/sda bs=4096 conv=fsync status=progress
+sudo dd if=nixos-sd-image-XXX-aarch64-linux.img of=/dev/sda bs=65536 conv=fsync status=progress
 ```
 
 (`conv=fsync` means “physically write output file data before
-finishing [and] also write metadata.”) This process took 13 minutes on
+finishing [and] also write metadata.”) This process took 5 minutes on
 the Pi 4.
 
 Then insert this SD card and boot and we have NixOS. (I get a bunch of
@@ -105,7 +105,7 @@ found:
 ```
 > set_network 0 ssid "Turing Guest"
 OK
-> set_newwork 0 psk "NETWORK PASSWORD"
+> set_network 0 psk "NETWORK PASSWORD"
 OK
 > enable_network 0
 OK
@@ -160,6 +160,7 @@ networking.wireless.networks = {
   };
 };
 ```
+
 Following a change to the configuration, one runs
 ```sh
 nixos-rebuild switch
@@ -171,6 +172,48 @@ embedded like this.)
 
 I will include the entire current config file in an appendix.
 
+# Users
+
+To set up individual accounts with ssh public key logins, add eash user and their key to the config file, e.g.: :
+
+```nix
+  users.users.radka = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    openssh.authorizedKeys.keys  = [ "ssh-ed25519 AAAAC3Nza... rjersakova@turing.ac.uk" ];
+  };
+```
+
+Make sure each user has a password:
+
+```sh
+passwd <USER>
+```
+
+# Connecting to Tailscale
+
+Note this requires having a user password set up (you need to enter a password to connect).
+
+Reboot the Pi
+
+```
+sudo reboot
+```
+
+Generate a [Tailscale authentication key](https://tailscale.com/kb/1085/auth-keys/#generating-a-key) (only a network admin can do this) and run
+
+```
+sudo tailscale up --authkey <AUTHENTICATION KEY>
+```
+
+The admin then approves the machine.
+
+Once setup, anyone can connect to the machine via ssh, e.g.:
+
+```
+ssh <MACHINE NAME> -l <USER NAME>
+```
+
 ## TODO
 
 - Find out how to store secrets 
@@ -179,7 +222,6 @@ I will include the entire current config file in an appendix.
 - Write all the other SD cards
 - Learn about "Flakes"
 - Learn about "home-manager" or whatever it is
-
 
 
 [^1]: https://nixos.org/
@@ -264,8 +306,7 @@ I will include the entire current config file in an appendix.
     packages = with pkgs; [
       tree
     ];
-  };
-
+   };
   
   ## Networking
   ## ----------

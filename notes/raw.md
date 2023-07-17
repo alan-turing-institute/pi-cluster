@@ -147,11 +147,6 @@ At this point, I no longer have wifi and I'm not sure how it all
 works. (For example, `wpa_cli` is no longer able to connect to
 `wpa_supplicant`.)
 
-## Set password 
-
-```
-passwd <USER>
-```
 
 # Configuration
 
@@ -165,6 +160,7 @@ networking.wireless.networks = {
   };
 };
 ```
+
 Following a change to the configuration, one runs
 ```sh
 nixos-rebuild switch
@@ -176,7 +172,25 @@ embedded like this.)
 
 I will include the entire current config file in an appendix.
 
-## Connecting to Tailscale
+# Users
+
+To set up individual accounts with ssh public key logins, add eash user and their key to the config file, e.g.: :
+
+```nix
+  users.users.radka = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    openssh.authorizedKeys.keys  = [ "ssh-ed25519 AAAAC3Nza... rjersakova@turing.ac.uk" ];
+  };
+```
+
+Make sure each user has a password:
+
+```sh
+passwd <USER>
+```
+
+# Connecting to Tailscale
 
 Note this requires having a user password set up (you need to enter a password to connect).
 
@@ -197,7 +211,7 @@ The admin then approves the machine.
 Once setup, anyone can connect to the machine via ssh, e.g.:
 
 ```
-ssh hilbert -l nixos
+ssh <MACHINE NAME> -l <USER NAME>
 ```
 
 ## TODO
@@ -292,8 +306,7 @@ ssh hilbert -l nixos
     packages = with pkgs; [
       tree
     ];
-  };
-
+   };
   
   ## Networking
   ## ----------

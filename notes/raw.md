@@ -71,11 +71,11 @@ in the target SD card (to a USB socket on the Pi, with an SD reader)
 you know which device is assigned. In my case that was
 `/dev/sda`. Then,
 ```sh
-sudo dd if=nixos-sd-image-XXX-aarch64-linux.img of=/dev/sda bs=4096 conv=fsync status=progress
+sudo dd if=nixos-sd-image-XXX-aarch64-linux.img of=/dev/sda bs=65536 conv=fsync status=progress
 ```
 
 (`conv=fsync` means “physically write output file data before
-finishing [and] also write metadata.”) This process took 13 minutes on
+finishing [and] also write metadata.”) This process took 5 minutes on
 the Pi 4.
 
 Then insert this SD card and boot and we have NixOS. (I get a bunch of

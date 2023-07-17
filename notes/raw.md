@@ -153,24 +153,6 @@ works. (For example, `wpa_cli` is no longer able to connect to
 passwd <USER>
 ```
 
-## Connecting to Tailscale
-
-Note this requires having a user password set up (you need to enter a password to connect).
-
-Reboot the Pi
-
-```
-sudo reboot
-```
-
-Generate a [Tailscale authentication key](https://tailscale.com/kb/1085/auth-keys/#generating-a-key) (only a network admin can do this) and run
-
-```
-sudo tailscale up --authkey <AUTHENTICATION KEY>
-```
-
-The admin then approves the machine.
-
 # Configuration
 
 The main point is that there a lot of possible options that can be set
@@ -194,6 +176,30 @@ embedded like this.)
 
 I will include the entire current config file in an appendix.
 
+## Connecting to Tailscale
+
+Note this requires having a user password set up (you need to enter a password to connect).
+
+Reboot the Pi
+
+```
+sudo reboot
+```
+
+Generate a [Tailscale authentication key](https://tailscale.com/kb/1085/auth-keys/#generating-a-key) (only a network admin can do this) and run
+
+```
+sudo tailscale up --authkey <AUTHENTICATION KEY>
+```
+
+The admin then approves the machine.
+
+Once setup, anyone can connect to the machine via ssh, e.g.:
+
+```
+ssh hilbert -l nixos
+```
+
 ## TODO
 
 - Find out how to store secrets 
@@ -202,7 +208,6 @@ I will include the entire current config file in an appendix.
 - Write all the other SD cards
 - Learn about "Flakes"
 - Learn about "home-manager" or whatever it is
-
 
 
 [^1]: https://nixos.org/

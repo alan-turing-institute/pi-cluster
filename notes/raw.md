@@ -147,6 +147,19 @@ At this point, I no longer have wifi and I'm not sure how it all
 works. (For example, `wpa_cli` is no longer able to connect to
 `wpa_supplicant`.)
 
+## Connecting to Tailscale
+
+Reboot the Pi
+
+```
+sudo reboot
+```
+
+Generate a [Tailscale authentication key](https://tailscale.com/kb/1085/auth-keys/#generating-a-key) (only a network admin can do this) and run
+
+```
+sudo tailscale up --authkey <AUTHENTICATION KEY>
+```
 
 # Configuration
 

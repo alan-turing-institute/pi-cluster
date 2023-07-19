@@ -214,6 +214,17 @@ Once setup, anyone can connect to the machine via ssh, e.g.:
 ssh <MACHINE NAME> -l <USER NAME>
 ```
 
+
+## sudo and ssh
+
+In order to allow a user to sudo without entering a password, add the
+following line to the configuration (and make sure your user is a
+member of the `wheel` group):
+```nix
+security.sudo.wheelNeedsPassword = false;
+```
+
+
 ## TODO
 
 - Find out how to store secrets 
@@ -229,6 +240,10 @@ ssh <MACHINE NAME> -l <USER NAME>
 [^2]: https://nixos.wiki/wiki/NixOS_on_ARM/Raspberry_Pi_4
 
 [^3]: https://nix.dev/tutorials/nixos/installing-nixos-on-a-raspberry-pi
+
+
+
+
 
 
 

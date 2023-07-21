@@ -172,7 +172,7 @@ embedded like this.)
 
 I will include the entire current config file in an appendix.
 
-# Users
+## Users
 
 To set up individual accounts with ssh public key logins, add eash user and their key to the config file, e.g.: :
 
@@ -190,7 +190,7 @@ Make sure each user has a password:
 passwd <USER>
 ```
 
-# Connecting to Tailscale
+## Connecting to Tailscale
 
 Note this requires having a user password set up (you need to enter a password to connect).
 
@@ -224,6 +224,13 @@ member of the `wheel` group):
 security.sudo.wheelNeedsPassword = false;
 ```
 
+Currently, all Pis have a `nixos` user (this will be removed once everyone has ssh access set up). To connect from one Pi to another, find its IP using `ifconfig` and then connect to it via ssh from your current device (`ssh -l nixos <IP address>`.
+
+## Devices
+
+hilbert: RJ and JG have user accounts, RJ can ssh
+post: RJ and JG have user accounts
+kleene: RJ and JG have user accounts
 
 ## TODO
 
@@ -329,7 +336,7 @@ security.sudo.wheelNeedsPassword = false;
   ## TODO: Keep secrets somewhere else!
   
   networking.wireless.networks = {
-    "Turing Guest" = {
+    "Turing LAB" = {
       psk = "<PASSWORD>";
     };
   };
